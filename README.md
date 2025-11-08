@@ -17,17 +17,20 @@ It moves files to a per-user _trash_ instead of permanently deleting them, while
 
 ## Installation
 
-Install via Poetry:
+**NOTE:** To use `resrm` with `sudo`, the path to `resrm` must be in the `$PATH` seen by `root`.\
+Either install `resrm` as `root`, use `sudo -E resrm`, or add the `$PATH` to `/etc/sudoers` using its `Defaults secure_path` parameter.
+
+Install via PyPI:
 
 ```bash
-poetry add resrm
+pip install resrm
 ```
 
 Or clone the repo and install locally:
 
 ```bash
 git clone https://github.com/mdaleo404/resrm.git
-cd resrm
+cd resrm/resrm
 poetry install
 ```
 
