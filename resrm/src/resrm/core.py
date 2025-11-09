@@ -244,7 +244,7 @@ def move_to_trash(path: Path, interactive: bool, force: bool, recursive: bool, p
             print(f"Failed permanent delete: {e}")
         return
 
-    # 🚫 Prevent non-root user deleting root-owned files
+    # Prevent non-root user deleting root-owned files
     try:
         st = path.stat()
         if st.st_uid == 0 and os.geteuid() != 0:
@@ -253,7 +253,7 @@ def move_to_trash(path: Path, interactive: bool, force: bool, recursive: bool, p
     except Exception:
         pass
 
-    # 🧭 Detect which trash to use (based on file owner)
+    # Detect which trash to use (based on file owner)
     try:
         import pwd
         owner_uid = path.stat().st_uid
