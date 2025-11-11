@@ -116,6 +116,8 @@ def find_candidates(identifier: str) -> List[Dict]:
     if id_matches:
         return id_matches
 
+    return []
+
 def restore_many(identifiers: List[str]):
     """Restore multiple files, prompting when needed."""
     for identifier in identifiers:
@@ -216,7 +218,7 @@ def empty_trash():
     save_meta(meta)
     print(f"Trash emptied ({count} entries removed).")
 
-def move_to_trash(path: Path, interactive: bool, force: bool, recursive: bool, skip_trash: bool):
+def move_to_trash(path: Path, interactive: bool, force: bool, skip_trash: bool):
     if not path.exists():
         if force:
             return
@@ -224,7 +226,7 @@ def move_to_trash(path: Path, interactive: bool, force: bool, recursive: bool, s
         return
 
     # Interactive prompt
-    if interactive:
+    if interactive and not force:
         try:
             yn = input(f"remove '{path}'? [y/N] ").strip().lower()
         except KeyboardInterrupt:
@@ -308,15 +310,25 @@ def main(argv: Optional[List[str]] = None):
     parser.add_argument("-f", "--force", action="store_true", help="force")
     parser.add_argument("-i", action="store_true", help="interactive")
     parser.add_argument("--skip-trash", action="store_true", help="permanent delete")
-    parser.add_argument("--restore", nargs="+", help="restore by id or basename")
+    parser.add_argument("--restore", nargs="+", metavar="item", help="restore by id or basename")
     parser.add_argument("-l", action="store_true", help="list trash")
     parser.add_argument("--empty", action="store_true", help="empty the trash permanently")
     parser.add_argument("-h", "--help", action="store_true", help="show help")
+    parser.add_argument("-V", "--version", action="store_true", help="show version")
     args = parser.parse_args(argv)
 
-    # Always print docstring if --help or no args
-    if args.help or not argv:
+    # Always print docstring if -h or --help
+    if args.help:
         print(__doc__)
+        return
+
+    if args.version:
+        print("resrm 0.2.1")
+        return
+
+    if not args.paths and not (args.l or args.empty or args.restore):
+        print("resrm: missing operand")
+        print("Try 'resrm --help' for more information.")
         return
 
     if args.l:
@@ -344,4 +356,4 @@ def main(argv: Optional[List[str]] = None):
                 continue
             print(f"resrm: cannot remove '{pth}': Is a directory")
             continue
-        move_to_trash(pth, interactive=args.i, force=args.force, recursive=args.r, skip_trash=args.skip_trash)
+        move_to_trash(pth, interactive=args.i, force=args.force, skip_trash=args.skip_trash)
