@@ -22,11 +22,19 @@ import sys
 import uuid
 import datetime
 import textwrap
+import importlib.metadata
 from pathlib import Path
 from typing import List, Dict, Optional
 
 
 # Config
+def get_version():
+    try:
+        return importlib.metadata.version("resrm")
+    except importlib.metadata.PackageNotFoundError:
+        return "unknown"
+
+
 def get_trash_base_for_user(uid: int) -> Path:
     """Return the trash base path depending on whether user is root or normal."""
     if uid == 0:
@@ -389,17 +397,13 @@ def main(argv: Optional[List[str]] = None):
     )
     parser.add_argument("-h", "--help", action="store_true", help="show help")
     parser.add_argument(
-        "-V", "--version", action="store_true", help="show version"
+        "-V", "--version", action="version", version=f"resrm {get_version()}"
     )
     args = parser.parse_args(argv)
 
     # Always print docstring if -h or --help
     if args.help:
         print(__doc__)
-        return
-
-    if args.version:
-        print("resrm 0.2.1")
         return
 
     if not args.paths and not (args.l or args.empty or args.restore):
