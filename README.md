@@ -13,7 +13,8 @@ It moves files to a per-user _trash_ instead of permanently deleting them, while
 - Supports `-r`, `-f`, `-i`, `--skip-trash` options
 - Works with `sudo` for root-owned files
 - Automatically prunes Trash entries older than `$RESRM_TRASH_LIFE` days (default **7**, minimum **1**)
-  > Note: if you need immediate deletion, use the regular `rm` command instead.
+
+  > Note: if you need immediate deletion, use the `--skip-trash` flag.
 
 ---
 
@@ -28,6 +29,23 @@ export RESRM_TRASH_LIFE=10
 ---
 
 ## Installation
+
+### From package manager
+
+**Ubuntu 22.04 and 24.04**
+```
+sudo add-apt-repository ppa:mdaleo/resrm
+sudo apt update
+sudo apt install resrm
+```
+
+**Fedora 41, 42, 43**
+```
+sudo dnf copr enable mdaleo/resrm
+sudo dnf install resrm
+```
+
+### From PyPI
 
 **NOTE:** To use `resrm` with `sudo`, the path to `resrm` must be in the `$PATH` seen by `root`.\
 Either:
@@ -45,7 +63,7 @@ Install via PyPI (_preferred_):
 pip install resrm
 ```
 
-Or clone the repo and install locally:
+### From this repository
 
 ```bash
 git clone https://github.com/mdaleo404/resrm.git
